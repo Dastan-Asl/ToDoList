@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-class Functional extends React.Component {
+class List extends React.Component {
   state = {
     value: "",
     tasks: [],
@@ -71,7 +71,13 @@ class Functional extends React.Component {
                         size="lg"
                         onChange={(e) => this.handleToggleTask(e, index)}
                       />
-                      <Text flex="1" fontSize="lg">
+                      <Text
+                        flex="1"
+                        style={{
+                          textDecoration: task.completed && "line-through",
+                        }}
+                        fontSize="lg"
+                      >
                         {task.text}
                       </Text>
                     </HStack>
@@ -86,4 +92,4 @@ class Functional extends React.Component {
   }
 }
 
-export default Functional;
+export default List;

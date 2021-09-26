@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import List from "./Function";
 
 import { ChakraProvider } from "@chakra-ui/react";
 
 ReactDOM.render(
   <ChakraProvider>
-    <App />
+    <List />
   </ChakraProvider>,
   document.getElementById("root")
 );
