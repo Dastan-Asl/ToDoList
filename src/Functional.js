@@ -10,6 +10,7 @@ import {
   Checkbox,
   Text,
 } from "@chakra-ui/react";
+import { v4 as uuidv4 } from "uuid";
 
 const List = (props) => {
   const [value, setValue] = useState("");
@@ -19,6 +20,7 @@ const List = (props) => {
     const task = {
       text: value,
       completed: false,
+      id: uuidv4(),
     };
 
     const arr = [...tasks, task];
@@ -26,11 +28,23 @@ const List = (props) => {
     setValue("");
   };
 
-  const handleToggleTask = (e, index) => {
+  const handleDeleteTask = (id) => {
+    const arr = [...tasks];
+    const filtered = arr.filter((el) => el.id !== id);
+    setTasks(filtered);
+  };
+
+  const handleToggleTask = (e, id) => {
     const check = e.target.checked;
     const arr = [...tasks];
+    const index = arr.findIndex((el) => el.id === id);
     arr[index].completed = check;
     setTasks(arr);
+  };
+
+  const sortByCompleted = (a, b) => {
+    const sortArr = a.completed - b.completed;
+    return sortArr;
   };
 
   return (
@@ -53,10 +67,10 @@ const List = (props) => {
         </Box>
         <Box borderWidth={1} p={5} borderRadius="lg" bg="gray.100">
           <VStack alignItems="stretch">
-            {tasks.map((task, index) => {
+            {tasks.sort(sortByCompleted).map((task, index) => {
               return (
                 <Box
-                  key={index}
+                  key={task.id}
                   borderWidth="1px"
                   backgroundColor="white"
                   borderRadius="lg"
@@ -65,7 +79,7 @@ const List = (props) => {
                   <HStack spacing={3}>
                     <Checkbox
                       size="lg"
-                      onChange={(e) => handleToggleTask(e, index)}
+                      onChange={(e) => handleToggleTask(e, task.id)}
                     />
                     <Text
                       flex="1"
@@ -76,6 +90,9 @@ const List = (props) => {
                     >
                       {task.text}
                     </Text>
+                    <Button onClick={() => handleDeleteTask(task.id)}>
+                      Delete task
+                    </Button>
                   </HStack>
                 </Box>
               );
