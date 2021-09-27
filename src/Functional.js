@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-const List = () => {
+const List = (props) => {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useState([]);
 
@@ -20,8 +20,10 @@ const List = () => {
       text: value,
       completed: false,
     };
+
     const arr = [...tasks, task];
     setTasks(arr);
+    setValue("");
   };
 
   const handleToggleTask = (e, index) => {
@@ -30,6 +32,7 @@ const List = () => {
     arr[index].completed = check;
     setTasks(arr);
   };
+
   return (
     <Box p={20}>
       <VStack alignItems="stretch" spacing={5}>

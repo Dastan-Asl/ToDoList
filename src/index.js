@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
-import List from "./Function";
+import List from "./Functional";
 
 import { ChakraProvider } from "@chakra-ui/react";
 
