@@ -10,27 +10,46 @@ import {
   Checkbox,
   Text,
 } from "@chakra-ui/react";
+import { v4 as uuidv4 } from "uuid";
 
 class List extends React.Component {
   state = {
     value: "",
-    tasks: [],
+    tasks: localStorage.getItem("tasks")
+      ? JSON.parse(localStorage.getItem("tasks"))
+      : [],
   };
 
   handleAddTask = () => {
     const task = {
       text: this.state.value,
       completed: false,
+      id: uuidv4(),
     };
     const arr = [...this.state.tasks, task];
-    this.setState({ tasks: arr, value: "" });
+    this.setState({ tasks: arr.sort(this.sortByCompleted), value: "" });
+    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
-  handleToggleTask = (e, index) => {
+  handleDeleteTask = (id) => {
+    const arr = [...this.state.tasks];
+    const filtered = arr.filter((el) => el.id !== id);
+    this.setState({ tasks: filtered.sort(this.sortByCompleted) });
+    localStorage.setItem("tasks", JSON.stringify(filtered));
+  };
+
+  handleToggleTask = (e, id) => {
     const check = e.target.checked;
     const arr = [...this.state.tasks];
+    const index = arr.findIndex((el) => el.id === id);
     arr[index].completed = check;
-    this.setState({ tasks: arr });
+    this.setState({ tasks: arr.sort(this.sortByCompleted) });
+    localStorage.setItem("tasks", JSON.stringify(arr));
+  };
+
+  sortByCompleted = (a, b) => {
+    const sortArr = a.completed - b.completed;
+    return sortArr;
   };
 
   render() {
@@ -57,10 +76,10 @@ class List extends React.Component {
           </Box>
           <Box borderWidth={1} p={5} borderRadius="lg" bg="gray.100">
             <VStack alignItems="stretch">
-              {this.state.tasks.map((task, index) => {
+              {this.state.tasks.map((task) => {
                 return (
                   <Box
-                    key={index}
+                    key={task.id}
                     borderWidth="1px"
                     backgroundColor="white"
                     borderRadius="lg"
@@ -69,7 +88,7 @@ class List extends React.Component {
                     <HStack spacing={3}>
                       <Checkbox
                         size="lg"
-                        onChange={(e) => this.handleToggleTask(e, index)}
+                        onChange={(e) => this.handleToggleTask(e, task.id)}
                       />
                       <Text
                         flex="1"
@@ -80,6 +99,9 @@ class List extends React.Component {
                       >
                         {task.text}
                       </Text>
+                      <Button onClick={() => this.handleDeleteTask(task.id)}>
+                        Delete task
+                      </Button>
                     </HStack>
                   </Box>
                 );

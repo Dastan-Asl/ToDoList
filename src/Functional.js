@@ -14,7 +14,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const List = (props) => {
   const [value, setValue] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(
+    localStorage.getItem("tasks")
+      ? JSON.parse(localStorage.getItem("tasks"))
+      : []
+  );
 
   const handleAddTask = () => {
     const task = {
@@ -24,14 +28,16 @@ const List = (props) => {
     };
 
     const arr = [...tasks, task];
-    setTasks(arr);
+    setTasks(arr.sort(sortByCompleted));
     setValue("");
+    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
   const handleDeleteTask = (id) => {
     const arr = [...tasks];
     const filtered = arr.filter((el) => el.id !== id);
-    setTasks(filtered);
+    setTasks(filtered.sort(sortByCompleted));
+    localStorage.setItem("tasks", JSON.stringify(filtered));
   };
 
   const handleToggleTask = (e, id) => {
@@ -39,7 +45,8 @@ const List = (props) => {
     const arr = [...tasks];
     const index = arr.findIndex((el) => el.id === id);
     arr[index].completed = check;
-    setTasks(arr);
+    setTasks(arr.sort(sortByCompleted));
+    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
   const sortByCompleted = (a, b) => {
@@ -67,7 +74,7 @@ const List = (props) => {
         </Box>
         <Box borderWidth={1} p={5} borderRadius="lg" bg="gray.100">
           <VStack alignItems="stretch">
-            {tasks.sort(sortByCompleted).map((task, index) => {
+            {tasks.map((task) => {
               return (
                 <Box
                   key={task.id}
