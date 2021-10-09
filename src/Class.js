@@ -58,18 +58,18 @@ class List extends React.Component {
         <VStack alignItems="stretch" spacing={5}>
           <Box borderWidth={1} p={5} borderRadius="lg">
             <FormControl id="todo">
-              <FormLabel>What do you want to do?</FormLabel>
+              <FormLabel>Что вы хотите сделать?</FormLabel>
               <HStack>
                 <Input
                   value={this.state.value}
                   onChange={(e) => this.setState({ value: e.target.value })}
-                  placeholder="Your next task..."
+                  placeholder="Ваша следующая задача..."
                 />
                 <Button
                   disabled={this.state.value.length === 0}
                   onClick={this.handleAddTask}
                 >
-                  Submit
+                  Добавить
                 </Button>
               </HStack>
             </FormControl>
@@ -100,7 +100,7 @@ class List extends React.Component {
                         {task.text}
                       </Text>
                       <Button onClick={() => this.handleDeleteTask(task.id)}>
-                        Delete task
+                        Удалить
                       </Button>
                     </HStack>
                   </Box>
