@@ -24,6 +24,7 @@ class List extends React.Component {
       completed: false,
       id: uuidv4(),
     };
+
     const arr = [...this.state.tasks, task];
     this.setState({ tasks: arr.sort(this.sortByCompleted), value: "" });
   };
@@ -48,7 +49,7 @@ class List extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) });
+    this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) || [] });
   }
 
   componentDidUpdate() {
