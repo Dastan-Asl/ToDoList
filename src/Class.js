@@ -15,9 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 class List extends React.Component {
   state = {
     value: "",
-    tasks: localStorage.getItem("tasks")
-      ? JSON.parse(localStorage.getItem("tasks"))
-      : [],
+    tasks: [],
   };
 
   handleAddTask = () => {
@@ -28,14 +26,12 @@ class List extends React.Component {
     };
     const arr = [...this.state.tasks, task];
     this.setState({ tasks: arr.sort(this.sortByCompleted), value: "" });
-    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
   handleDeleteTask = (id) => {
     const arr = [...this.state.tasks];
     const filtered = arr.filter((el) => el.id !== id);
     this.setState({ tasks: filtered.sort(this.sortByCompleted) });
-    localStorage.setItem("tasks", JSON.stringify(filtered));
   };
 
   handleToggleTask = (e, id) => {
@@ -44,13 +40,20 @@ class List extends React.Component {
     const index = arr.findIndex((el) => el.id === id);
     arr[index].completed = check;
     this.setState({ tasks: arr.sort(this.sortByCompleted) });
-    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
   sortByCompleted = (a, b) => {
     const sortArr = a.completed - b.completed;
     return sortArr;
   };
+
+  componentDidMount() {
+    this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) });
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+  }
 
   render() {
     return (
