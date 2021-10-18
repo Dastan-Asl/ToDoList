@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   VStack,
@@ -14,11 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const List = (props) => {
   const [value, setValue] = useState("");
-  const [tasks, setTasks] = useState(
-    localStorage.getItem("tasks")
-      ? JSON.parse(localStorage.getItem("tasks"))
-      : []
-  );
+  const [tasks, setTasks] = useState([]);
 
   const handleAddTask = () => {
     const task = {
@@ -30,14 +26,12 @@ const List = (props) => {
     const arr = [...tasks, task];
     setTasks(arr.sort(sortByCompleted));
     setValue("");
-    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
   const handleDeleteTask = (id) => {
     const arr = [...tasks];
     const filtered = arr.filter((el) => el.id !== id);
     setTasks(filtered.sort(sortByCompleted));
-    localStorage.setItem("tasks", JSON.stringify(filtered));
   };
 
   const handleToggleTask = (e, id) => {
@@ -46,13 +40,20 @@ const List = (props) => {
     const index = arr.findIndex((el) => el.id === id);
     arr[index].completed = check;
     setTasks(arr.sort(sortByCompleted));
-    localStorage.setItem("tasks", JSON.stringify(arr));
   };
 
   const sortByCompleted = (a, b) => {
     const sortArr = a.completed - b.completed;
     return sortArr;
   };
+
+  useEffect(() => {
+    setTasks(JSON.parse(localStorage.getItem("tasks")) || []);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <Box p={20}>
