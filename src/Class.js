@@ -48,12 +48,21 @@ class List extends React.Component {
     return sortArr;
   };
 
+  checkLocalStorage = () => {
+    if (localStorage.getItem("tasks")) {
+      const tasks = JSON.parse(localStorage.getItem("tasks"));
+      this.setState({ tasks: tasks });
+    }
+  };
+
   componentDidMount() {
-    this.setState({ tasks: JSON.parse(localStorage.getItem("tasks")) || [] });
+    this.checkLocalStorage();
   }
 
-  componentDidUpdate() {
-    localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.tasks !== prevState.tasks) {
+      localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+    }
   }
 
   render() {
